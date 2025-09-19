@@ -10,3 +10,4 @@ class AppEnv:
     ai_model: str = os.environ["AI_MODEL"]
     ai_api_url: str = os.environ["AI_API_URL"]
     simple_chart_prompt: str = os.environ["SIMPLE_CHART_PROMPT"]
+    allowed_origins: str = os.environ["ALLOWED_ORIGINS"]
