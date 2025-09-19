@@ -16,7 +16,7 @@ class ParameterProccesed(BaseModel):
     data: List[DataValue]
 
 class ChartSchema(BaseModel):
-    title: str = Field(description='Titulo dela  gráfica')
+    title: str = Field(description='Titulo de la  gráfica')
     chart_type :str = Field(description='Tipo de gráfica')
     parameter: List[ChartParameter] = Field(description='Parámetros')
 
