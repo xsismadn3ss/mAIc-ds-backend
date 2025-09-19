@@ -6,7 +6,7 @@ load_dotenv()
 
 
 @dataclass(frozen=True)
-class App_config:
+class AppEnv:
     ai_model: str = os.environ["AI_MODEL"]
     ai_api_url: str = os.environ["AI_API_URL"]
-    data_science_propmt: str = os.environ["DATA_SCIENCE_PROPMT"]
+    simple_chart_prompt: str = os.environ["SIMPLE_CHART_PROMPT"]
