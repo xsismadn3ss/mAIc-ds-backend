@@ -1,7 +1,10 @@
 from abc import abstractmethod, ABC
-from typing import Dict
+from typing import List
 
-class ABC_Chart_Schema(ABC):
+from src.models.schema.charts import ChartSchema
+
+
+class ABC_ChartSchema(ABC):
     @abstractmethod
-    def build_schemas(self, columns, dtypes, describe) -> Dict[str, object]:
+    def build_schema(self, columns, dtypes, describe) -> List[ChartSchema]:
         raise NotImplementedError()
