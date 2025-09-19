@@ -1,10 +1,4 @@
 from fastapi import FastAPI
-from src.routes import upload
 from src.routes import charts
-
-
-app = FastAPI()
-
-# router
-app.include_router(upload.router)
+app = FastAPI(title="AI Charts API")
 app.include_router(charts.router)
