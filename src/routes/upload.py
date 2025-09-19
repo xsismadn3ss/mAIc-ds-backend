@@ -1,21 +1,31 @@
-from fastapi import APIRouter, UploadFile, File
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, UploadFile, File, Depends
 
-from src.service.ai_data_science import analyze_df
-from src.service.file_handler import generate_df
+from src.service.pipe.impl.pandas_pipe_service import Pandas_Pipe_Service
+from src.service.charts.impl.ai_chart_schema import AI_Chart_Schema
 
 
-router = APIRouter(prefix='/upload', tags=["Upload"])
+router = APIRouter(prefix="/upload", tags=["Upload"])
 
-@router.post(
-    '/',
-    description="Enviar archivos CSV o excel para analizarlos con AI")
-async def upload_file(file: UploadFile = File(...)):
-    df = generate_df(file)
 
-    # context
-    columns = df.columns.tolist()
+def pipe_service():
+    return Pandas_Pipe_Service()
+
+
+def chart_service():
+    return AI_Chart_Schema()
+
+
+@router.post("/", description="Enviar archivos CSV o excel para analizarlos con AI")
+async def upload_file(
+    file: UploadFile = File(...),
+    pipe: Pandas_Pipe_Service = Depends(pipe_service),
+    chart: AI_Chart_Schema = Depends(chart_service),
+):
+    df = await pipe.generate_df(file)
+
+    columns = df.columns.to_list()
     dtypes = df.dtypes
     describe = df.describe()
 
-    return StreamingResponse(analyze_df(columns, dtypes, describe), media_type="text/plain")
+    schema = chart.build_schemas(columns, dtypes, describe)
+    return schema
