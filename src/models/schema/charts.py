@@ -15,9 +15,14 @@ class ParameterProccesed(BaseModel):
     y_axis: str
     data: List[DataValue]
 
+class ChartSchema(BaseModel):
+    title: str = Field(description='Titulo dela  gráfica')
+    chart_type :str = Field(description='Tipo de gráfica')
+    parameter: List[ChartParameter] = Field(description='Parámetros')
 
-class ChartScheme(BaseModel):
-    title: str = Field("Titulo de la gráfica")
-    chart_type: str = Field("Tipo de gráfica")
-    data: List[ParameterProccesed]
+
+class Chart(BaseModel):
+    title: str = Field(description="Titulo de la gráfica")
+    chart_type: str = Field(description="Tipo de gráfica")
+    data: List[ParameterProccesed] = Field(description='Datos procesados')
 
