@@ -15,15 +15,15 @@ class AI_ChartSchema(ABC_ChartSchema):
         super().__init__()
 
     @override
-    def build_schema(self, columns, dtypes, describe) -> List[ChartSchema]:
+    async def build_schema(self, columns, dtypes, describe) -> List[ChartSchema]:
         base_prompt: str = AppEnv.simple_chart_prompt
         prompt: str = f"{base_prompt}\nColumnas: {str(columns)}\n\nTipos de datos: {str(dtypes)}\n\nResumen: {str(describe)}"
         msg = LLM_Message(content=prompt)
-        response = self.llm.create(messages=[msg])
+        response = await self.llm.create(messages=[msg])
 
         try:
             data: dict = json.loads(response.replace("```json", "").replace("```", ""))
-            return [ChartSchema(**d) for d in data.get("charts")]
+            return [ChartSchema(**d) for d in data["charts"]]
         except Exception as e:
             print(type(e))
             raise HTTPException(status_code=500, detail=str(e))

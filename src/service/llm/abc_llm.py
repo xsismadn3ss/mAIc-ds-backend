@@ -5,5 +5,5 @@ from src.models.schema.llm_schema import LLM_Message
 
 class ABC_LLM(ABC):
     @abstractmethod
-    def create(self, messages: List[LLM_Message]) -> str:
+    async def create(self, messages: List[LLM_Message]) -> str:
         raise NotImplementedError()
