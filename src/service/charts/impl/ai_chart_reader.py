@@ -11,13 +11,13 @@ class AI_ChartReader:
         self.llm = llm
         super().__init__()
 
-    def read_charts(self, charts: List[Chart]) -> str:
+    async def read_charts(self, charts: List[Chart]) -> str:
         base_prompt: str = AppEnv().read_chart_prompt
         prompt: str = (
             f"{base_prompt}\nGráficas: {str([chart.model_dump() for chart in charts])}"
         )
         msg = LLM_Message(content=prompt)
-        response = self.llm.create(messages=[msg])
+        response = await self.llm.create(messages=[msg])
         return response
 
 
