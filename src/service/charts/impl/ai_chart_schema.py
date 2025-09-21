@@ -17,9 +17,7 @@ class AI_ChartSchema(ABC_ChartSchema):
     @override
     def build_schema(self, columns, dtypes, describe) -> List[ChartSchema]:
         base_prompt: str = AppEnv.simple_chart_prompt
-        prompt: str = (
-            f"{base_prompt}\nColumnas: {str(columns)}\n\nTipos de datos: {str(dtypes)}\n\nResumen: {str(describe)}"
-        )
+        prompt: str = f"{base_prompt}\nColumnas: {str(columns)}\n\nTipos de datos: {str(dtypes)}\n\nResumen: {str(describe)}"
         msg = LLM_Message(content=prompt)
         response = self.llm.create(messages=[msg])
 

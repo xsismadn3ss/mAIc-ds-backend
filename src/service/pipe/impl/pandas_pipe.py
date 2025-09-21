@@ -18,7 +18,7 @@ class PandasPipe(ABC_Pipe):
 
         # generar dataframe si es un excel
         else:
-            df: DataFrame = pd.read_excel(file.file, engine='openpyxl')
+            df: DataFrame = pd.read_excel(file.file, engine="openpyxl")
 
         return df
 

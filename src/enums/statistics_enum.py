@@ -1,4 +1,5 @@
 """Enums relacionados a estadística"""
+
 from enum import Enum
 
 

@@ -1,6 +1,7 @@
 """
 Variables de entorno del proyecto cargadas en memoria
 """
+
 import os
 from dataclasses import dataclass
 from dotenv import load_dotenv

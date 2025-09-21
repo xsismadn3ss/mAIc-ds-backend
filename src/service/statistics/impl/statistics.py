@@ -19,7 +19,7 @@ def remove_parentheses_content(text):
     Returns:
         str: El texto modificado sin el contenido entre paréntesis.
     """
-    return re.sub(r'\s*\(.*?\)', '', text).strip()
+    return re.sub(r"\s*\(.*?\)", "", text).strip()
 
 
 class Statistics(ABCStatistics):
@@ -38,7 +38,9 @@ class Statistics(ABCStatistics):
     @override
     def mode(self, x_column: str | None, y_column: str, df: DataFrame) -> Any:
         if x_column:
-            return df.groupby(x_column)[y_column].apply(lambda x: x.mode().iloc[0] if not x.mode().empty else None)
+            return df.groupby(x_column)[y_column].apply(
+                lambda x: x.mode().iloc[0] if not x.mode().empty else None
+            )
         return df[y_column].mode().iloc[0] if not df[y_column].mode().empty else None
 
     @override
@@ -47,7 +49,7 @@ class Statistics(ABCStatistics):
             return df.groupby(x_column)[y_column].std()
         return df[y_column].std()
 
-    def handle(self, x_column: str | None, y_column: str, mesure: str, df: DataFrame) -> Optional[Series]:
+    def handle(self, x_column: str | None, y_column: str, mesure: str, df: DataFrame):
         clean_y_column = remove_parentheses_content(y_column)
         if Mesures.MEDIANA.value in mesure:
             return self.median(x_column, clean_y_column, df)
@@ -58,10 +60,11 @@ class Statistics(ABCStatistics):
         elif Mesures.DESV_ESTAND.value in mesure:
             return self.std(x_column, clean_y_column, df)
         else:
-            #devolver serie normal en base x y y
+            # devolver serie normal en base x y y
             if x_column:
                 return df.groupby(x_column)[clean_y_column].apply(lambda x: x)
             return df[clean_y_column]
+
 
 def statistics_dep():
     return Statistics()
