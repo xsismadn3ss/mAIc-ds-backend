@@ -1,21 +1,59 @@
 # AI API
-Capa de backend para ejecutar las peticiones de los clientes para eldashboard con IA llamado "analisis alinstante".
+Capa de aplicación backend para ejecutar las peticiones de los clientes para el dashboard con IA llamado "análisis al instante". Este proyecto permite generar esquemas de gráficas usando IA.
 
-## Requerimientos
-Desarrollar un backend desarrollado en **python** usando **FastAPI**. Se deben utilizar librerías como **Pandas** para procesar las hojas de cálculo y generar los dataframes.
+## Tecnologías utilizadas
+- **pydantic**: librería para crear DTOs (Data Transfer Objects) con validaciones.
+- **g4f**: GPT 4 All, librería gratis para integrar IA. Debido a que es solo para desarrollo su exactitud y velocidad no es optimizada, pero es útil para hacer demos. 
+- **FastAPI**: librería backend para Python,
+- **Pandas**: librería con utilidades para ciencia de datos,
+- **UV**: gestor de paquetes desarrollado por Astral es útil para crear entornos virtuales e instalar librerías muy rápido gracias a su integración con rust.
 
-## Features
-- Desarrollar un Endpoint que admita archivos CSV y XLSX (excell), en la  lógica de negocio se deben procesar los datos y generar los dataframes, posteriormente se deben mandar los dataframes al LLM para que los interprete correctamente y los develva cómo un JSON con el siquiente esquema.
+## Configurar entorno virtual
 
-```json
-{
-    "title": "...",
-    "chart_type": "...",
-    "parameters": [
-        {"x_axis": "Categoria 1", "y_axis": "valor1"},
-        // ...
-    ]
-}
+1. Instalar uv
+
+Windows:
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-- Desarrollar un segundo endpoint para obtener los datos necesarios de un gráfico específico. En este endpoint se reciben los parameters del gráfico y devuele los datos agregados y formateados listos para ser visualizados.
+Linux/macOS
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+2. Crear y activar entorno virtual:
+```bash
+uv venv .venv
+```
+
+Windows:
+```bash
+.venv/scripts/activate
+```
+
+Linux/MacOS
+```bash
+source .venv/scripts/activate
+```
+
+3. Instalar dependencias
+```bash
+uv sync
+```
+
+
+## Ejecutar proyecto
+Para entornos de desarrollo:
+```bash
+fastapi dev ./src/main.py
+```
+
+En producción:
+```bash
+uvicorn src.main:app
+```
+También se puede ejecutar el script ``main.py`` que se encuentra en la raíz del proyecto
+```bash
+python main.py
+```
