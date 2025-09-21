@@ -25,7 +25,7 @@ async def generate_simple_schema(
     dtypes = df.dtypes
     describe = df.describe()
 
-    schema = charts.build_schema(columns, dtypes, describe)
+    schema = await charts.build_schema(columns, dtypes, describe)
     return schema
 
 
