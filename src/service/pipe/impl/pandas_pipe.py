@@ -1,6 +1,5 @@
 import pandas as pd
 from pandas import DataFrame
-from io import BytesIO
 from fastapi import HTTPException, UploadFile
 from ..abstract_pipe import ABC_Pipe
 from typing import override
@@ -19,10 +18,10 @@ class PandasPipe(ABC_Pipe):
 
         # generar dataframe si es un excel
         else:
-            content: bytes = await file.read()
-            df: DataFrame = pd.read_excel(BytesIO(initial_bytes=content))
+            df: DataFrame = pd.read_excel(file.file, engine='openpyxl')
 
         return df
 
 
-pandas_pipe = lambda: PandasPipe()
+def pandas_pipe():
+    return PandasPipe()
