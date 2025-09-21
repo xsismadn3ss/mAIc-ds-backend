@@ -66,4 +66,4 @@ async def read_chart(
     charts: ChartReading,
     chart_reader: AI_ChartReader = Depends(ai_chart_reader_dep),
 ):
-    return Message(message=chart_reader.read_charts(charts.charts))
+    return Message(message=await chart_reader.read_charts(charts.charts))
