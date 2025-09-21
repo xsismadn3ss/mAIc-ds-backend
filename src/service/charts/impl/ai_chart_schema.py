@@ -24,11 +24,12 @@ class AI_ChartSchema(ABC_ChartSchema):
         response = self.llm.create(messages=[msg])
 
         try:
-            data: dict = json.loads(response)
+            data: dict = json.loads(response.replace("```json", "").replace("```", ""))
             return [ChartSchema(**d) for d in data.get("charts")]
         except Exception as e:
             print(type(e))
-            raise HTTPException(500, e)
+            raise HTTPException(status_code=500, detail=str(e))
 
 
-ai_chart_schema = lambda: AI_ChartSchema()
+def ai_chart_schema():
+    return AI_ChartSchema()
