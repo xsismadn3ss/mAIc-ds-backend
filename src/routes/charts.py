@@ -1,11 +1,14 @@
-import json
 from typing import List
+from fastapi.responses import JSONResponse
+from pydantic import ValidationError
+import json
+from fastapi import APIRouter, Query, UploadFile, File, Depends, HTTPException
 
-from fastapi import APIRouter, Query, UploadFile, File, Depends
-
-from src.models.schema.charts import Chart, ChartSchema
+from src.models.schema.charts import ChartSchema, ChartReading
+from src.models.schema.message import Message
 from src.service.pipe.impl.pandas_pipe import pandas_pipe, PandasPipe
 from src.service.charts.impl.ai_chart_schema import AI_ChartSchema, ai_chart_schema
+from src.service.charts.impl.ai_chart_reader import AI_ChartReader, ai_chart_reader_dep
 from src.service.charts.impl.chart_builder import ChartBuilder, chart_builder_dep
 
 router = APIRouter(prefix="/charts", tags=["Charts"])
@@ -31,10 +34,39 @@ async def generate_simple_schema(
 
 @router.post(path='/build', description="Construir gráficas")
 async def build_chart(
-        title: str = Query(description="titulo de la grafica"),
-        chart_type: str = Query(description="tipo de gráfica"),
-        parameter: str = Query(description="parámetros de la gráfica"),
-        file: UploadFile = File(alias="file"),
-        chart: ChartBuilder = Depends(chart_builder_dep),
-) -> Chart:
-    return await chart.build_chart(file, title, chart_type, parameter)
+        charts_schema: str = Query(description="Esquemas de gráficas"),
+        file: UploadFile = File(...),
+        chart_builder: ChartBuilder = Depends(chart_builder_dep),
+        pandas_pipe: PandasPipe = Depends(pandas_pipe),
+):
+    try:
+        data:dict = json.loads(charts_schema)
+        charts: List[ChartSchema] = []
+
+        schemas = [ChartSchema(**d) for d in data]
+        df = await pandas_pipe.generate_df(file)
+
+        for schema in schemas:
+            chart = chart_builder.build_chart(df, schema.title, schema.chart_type, schema.parameter, schema.mesure)
+            charts.append(chart)
+
+        return charts
+    except json.JSONDecodeError as e:
+        print(str(e))
+        raise HTTPException(status_code=400, detail="Error al decodificar el JSON de los esquemas de gráficas")
+    except ValidationError as e:
+        return JSONResponse(status_code=400, content={
+            "detail": e.title,
+            "error_count": e.error_count(),
+            "errors": e.errors(include_url=False),
+        })
+    except Exception as e:
+        print(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post(path='/read', description="Leer gráficas")
+async def read_chart(
+        charts: ChartReading,
+        chart_reader: AI_ChartReader = Depends(ai_chart_reader_dep),
+):
+    return Message(message=chart_reader.read_charts(charts.charts))
