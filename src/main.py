@@ -12,6 +12,7 @@ app.add_middleware(
         "http://localhost:*",
         "http://localhost:5175",
         "http://localhost:5173",
+        "https://analisis-al-instante.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
