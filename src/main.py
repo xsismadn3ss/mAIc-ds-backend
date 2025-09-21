@@ -1,16 +1,13 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from .config.environment import AppEnv
-
 from src.routes import charts
 app = FastAPI(title="AI Charts API")
 
 # CORS
-origins = AppEnv.allowed_origins.split(' ')
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['http://localhost:*', 'http://localhost:5175', 'http://localhost:5173'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
